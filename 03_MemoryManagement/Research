@@ -1,0 +1,17 @@
+To run an app with required options, need to use the next line:
+
+-Xss2M -Xmx1024M -XX:SurvivorRatio=5
+
+Note: the requirement to set the heap structure like this: 5-Eden,2-S0,4-S1 - is incorrect,
+because S0 and S1 should have the same size. To set size for the Survivors I've used -XX:SurvivorRatio=5,
+it means that each Survivor space will be 1/5 of Eden (S0:S1:Eden - 1:1:5).
+
+The reason of the error is next:
+
+a big byte array is created in a cycle, after creation it is added to arrayList,
+so that the link to the byte array always exists and GC isn't touched it.
+After some time (depends of VM options) an OutOfMemory exception appears.
+I've used the jvisualvm to ensure in the reason.
+I've pushed the array creation out of the cycle to avoid the exception.
+
+Please, see MemoryEaterFixed.java.
