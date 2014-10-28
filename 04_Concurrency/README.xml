@@ -1,0 +1,4 @@
+To build app:
+	gradle clean build
+To run app:
+	java -jar /path/to/jar
